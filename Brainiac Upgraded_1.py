@@ -249,7 +249,7 @@ class AI:
         self.network.weights1 = model.layers[0].get_weights()[0]
         self.network.weights2 = model.layers[2].get_weights()[0]
 
-class Neuralnet:
+class Neuralnet2:
     def __init__(self):
         self.text_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
         self.num_neurons = 10
