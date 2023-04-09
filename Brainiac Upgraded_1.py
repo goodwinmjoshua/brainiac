@@ -14,6 +14,55 @@ class AudioRecorder:
         recording = sd.rec(int(self.freq * self.duration), samplerate=self.freq, channels=1)
         sd.wait()  # Wait until recording is finished
         return np.squeeze(recording)
+class NeuralNet:
+    def __init__(self, input_size, hidden_size, output_size, learning_rate):
+        # Initialize the weights
+        self.W1 = np.random.randn(input_size, hidden_size)
+        self.W2 = np.random.randn(hidden_size, output_size)
+        self.learning_rate = learning_rate
+
+    def forward(self, X, sensor_data):
+        # Preprocess the sensor data
+        processed_data = preprocess_data(sensor_data)
+
+        # Concatenate the sensor data with the input data
+        X = np.concatenate((X, processed_data), axis=1)
+
+        # First layer
+        Z1 = np.dot(X, self.W1)
+        A1 = sigmoid(Z1)
+
+        # Second layer
+        Z2 = np.dot(A1, self.W2)
+        A2 = sigmoid(Z2)
+
+        return A2
+
+    def backward(self, X, y, sensor_data):
+        # Preprocess the sensor data
+        processed_data = preprocess_data(sensor_data)
+
+        # Concatenate the sensor data with the input data
+        X = np.concatenate((X, processed_data), axis=1)
+
+        # Forward pass
+        A2 = self.forward(X, sensor_data)
+
+        # Compute the error
+        error = compute_error(A2, y)
+
+        # Backpropagation
+        dZ2 = A2 - y
+        dW2 = np.dot(A1.T, dZ2)
+        dZ1 = np.dot(dZ2, self.W2.T) * sigmoid_prime(A1)
+        dW1 = np.dot(X.T, dZ1)
+
+        # Update the weights
+        self.W1 -= self.learning_rate * dW1
+        self.W2 -= self.learning_rate * dW2
+
+        return error
+
 class NeuralNetwork:
 # Define the neural network architecture
     input_size = 10 # number of input neurons
