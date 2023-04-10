@@ -24,7 +24,7 @@ openai.api_key = "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"
 
 
 class AudioRecorder:
-openai.api_key = "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"
+    openai.api_key = "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"
 
     def __init__(self, freq=44100, duration=5):
         self.freq = freq
