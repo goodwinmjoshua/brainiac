@@ -5,7 +5,7 @@ import cv2
 import openai
 openai.api_key = "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"
 
-
+from openai.api_resources import Completion
 import sounddevice as sd
 import speech_recognition as sr
 
