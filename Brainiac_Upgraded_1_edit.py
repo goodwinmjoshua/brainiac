@@ -14,6 +14,14 @@ import speech_recognition as sr
 
 import sys
 openai.api_key = "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"
+import openai
+from openai.api_resources import Completion
+import re
+import time
+
+openai.api_key = "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"
+
+
 
 class AudioRecorder:
 openai.api_key = "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"
@@ -252,16 +260,46 @@ class AI:
     def __init__(self):
         self.completion = openai.Completion()
 
-        # This is the model ID of the model you want to use
-        self.model = "text-davinci-002"
+openai.api_key = "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"
 
-        # These are the default prompt and response for the AI
-        self.prompt = "Hello, I am Brainiac. How may I assist you today?\n\n\n\nUser: "
-        self.response = ""
 
-        # Initialize the text model
-        self.text_model = openai.Model(self.model)
+class Brainiac:
+    def __init__(self):
+        self.text_model = openai.Model.retrieve(
+            "text-davinci-002", full=True
+        )
 
+    def generate_response(self, prompt):
+        response = Completion.create(
+            engine="davinci", prompt=prompt, max_tokens=1024
+        )["choices"][0]["text"]
+        return response
+
+    def text_model(self, text):
+        return self.text_model.generate(text)
+
+def remove_html_tags(text):
+    """Remove html tags from a string"""
+    clean = re.compile("<.*?>")
+    return re.sub(clean, "", text)
+
+
+def format_response(response):
+    """Format response string"""
+    response = response.replace("\n", " ")
+    response = remove_html_tags(response)
+    response = re.sub(r"\s+", " ", response).strip()
+    return response
+
+
+def main():
+    brainiac = Brainiac()
+
+    print("P: Hi, I'm Brainiac, a chatbot. How can I assist you today?")
+
+    while True:
+        time.sleep(1)
+        prompt = input("You:)
     def generate_response(self, prompt):
         if not prompt:
             return ""
