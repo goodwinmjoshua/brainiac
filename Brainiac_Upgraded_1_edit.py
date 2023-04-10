@@ -260,74 +260,73 @@ class AI:
     def __init__(self):
         self.completion = openai.Completion()
 
+
+# Authenticate to the OpenAI API using your API key
 openai.api_key = "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"
 
+# Load the text model
+text_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
+# Define the Brainiac class
 class Brainiac:
-    def __init__(self):
-        self.text_model = openai.Model.retrieve(
-            "text-davinci-002", full=True
-        )
-
+    def __init__(self, text_model, max_tokens=1024):
+        self.text_model = text_model
+        self.max_tokens = max_tokens
+    
     def generate_response(self, prompt):
-        response = Completion.create(
-            engine="davinci", prompt=prompt, max_tokens=1024
-        )["choices"][0]["text"]
-        return response
-
-    def text_model(self, text):
-        return self.text_model.generate(text)
-
-def remove_html_tags(text):
-    """Remove html tags from a string"""
-    clean = re.compile("<.*?>")
-    return re.sub(clean, "", text)
-
-
-def format_response(response):
-    """Format response string"""
-    response = response.replace("\n", " ")
-    response = remove_html_tags(response)
-    response = re.sub(r"\s+", " ", response).strip()
-    return response
-
-
-def main():
-    brainiac = Brainiac()
-
-    print("P: Hi, I'm Brainiac, a chatbot. How can I assist you today?")
-
-    while True:
-        time.sleep(1)
-        prompt = input("You:)
-    def generate_response(self, prompt):
-        if not prompt:
-            return ""
-
-        # Generate the response from the AI
+        # Generate a response using OpenAI's GPT-3 engine
         response = openai.Completion.create(
             engine="davinci",
             prompt=prompt,
-            max_tokens=1024,
-            n=1,
-            stop=None,
-            temperature=0.7,
-        )
+            max_tokens=self.max_tokens
+        )["choices"][0]["text"]
 
-        # Extract the text from the response and return it
-        response_text = response.choices[0].text.strip()
-        return response_text
+        # Remove any unnecessary whitespace from the response
+        response = re.sub(r"\n\s*\n", "\n", response.strip())
 
-def main1():
-    ai = AI()
+        # Return the response
+        return response
+
+# Define the main function
+def main():
+    # Create an instance of the Brainiac class
+    ai = Brainiac(text_model)
+
+    print("Hello, I'm Brainiac! How can I assist you today?")
 
     while True:
         prompt = input("P: ")
-        ai.response = ai.generate_response(ai.prompt + prompt)
-        print("B: " + ai.response)
+        if prompt.lower() in ['exit', 'quit', 'bye', 'goodbye']:
+            print("Brainiac: Goodbye!")
+            break
+        else:
+            response = ai.generate_response(prompt)
+            print("Brainiac:", response)
+
+    # Define a prompt
+    prompt = (f"Please provide me with your name and contact details.\n"
+              f"\n"
+              f"Name: John Doe\n"
+              f"Phone: 555-1234\n"
+              f"Email: john.doe@example.com\n"
+              f"\n"
+              f"I am interested in hosting an event at your facility.\n"
+              f"\n"
+              f"Event: Wedding reception\n"
+              f"Date: August 1st, 2023\n"
+              f"Number of guests: 150\n"
+              f"\n"
+              f"Additional details: I am looking for a venue that can accommodate both the wedding ceremony and the reception. "
+              f"I would also like to have access to outdoor space for photos and a cocktail hour. "
+              f"Can you provide me with more information about your facility and services?"
+              f"\n")
+    
+    # Generate a response
+    response = ai.generate_response(prompt)
+    print(response)
 
 if __name__ == "__main__":
-    main1()
+    main()
 
 
 
