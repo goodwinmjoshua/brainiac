@@ -271,7 +271,7 @@ text_model = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 class Brainiac:
     def __init__(self, text_model, max_tokens=1024):
         self.text_model = text_model
-        self.max_tokens = max_tokens
+        self.max_tokens = 1024
     
     def generate_response(self, prompt):
         # Generate a response using OpenAI's GPT-3 engine
