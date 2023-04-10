@@ -221,6 +221,7 @@ class NeuralNetwork:
             for j in range(len(inputs)):
                 self.activate(inputs[j])
                 self.backpropagate(inputs, targets[j], learning_rate)
+openai.api_key = "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"
 
 
 class Body: # class defined later
@@ -228,7 +229,6 @@ class Body: # class defined later
 
 class Environment: #class defined later
     pass
-import openai
 openai.api_key = "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"
 
 class AI:
