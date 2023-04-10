@@ -7,7 +7,8 @@ import tensorflow_hub as hub
 import numpy as np
 import cv2
 import openai
-api_key = "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"
+openai.api_key = "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"
+
 
 import sounddevice as sd
 import speech_recognition as sr
@@ -228,6 +229,8 @@ class Body: # class defined later
 
 class Environment: #class defined later
     pass
+import openai
+openai.api_key = "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"
 
 class AI:
     def __init__(self):
@@ -247,6 +250,49 @@ class AI:
         self.body_actions = []
         self.neurons = []
         self.env = Body()
+    def __init__(self):
+        self.completion = openai.Completion()
+
+        # This is the model ID of the model you want to use
+        self.model = "text-davinci-002"
+
+        # These are the default prompt and response for the AI
+        self.prompt = "Hello, I am Brainiac. How may I assist you today?\n\n\n\nUser: "
+        self.response = ""
+
+        # Initialize the text model
+        self.text_model = openai.Model(self.model)
+
+    def generate_response(self, prompt):
+        if not prompt:
+            return ""
+
+        # Generate the response from the AI
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt=prompt,
+            max_tokens=1024,
+            n=1,
+            stop=None,
+            temperature=0.7,
+        )
+
+        # Extract the text from the response and return it
+        response_text = response.choices[0].text.strip()
+        return response_text
+
+def main1():
+    ai = AI()
+
+    while True:
+        prompt = input("P: ")
+        ai.response = ai.generate_response(ai.prompt + prompt)
+        print("B: " + ai.response)
+
+if __name__ == "__main__":
+    main1()
+
+
 
     def process_audio(self, audio_data):
         # Convert audio data to text using speech recognition library
