@@ -1,7 +1,3 @@
-
-
-
-
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
@@ -17,8 +13,11 @@ import speech_recognition as sr
 ## TODO: modules sd, sr missing. sound recording not possible.
 
 import sys
+openai.api_key = "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"
 
 class AudioRecorder:
+openai.api_key = "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"
+
     def __init__(self, freq=44100, duration=5):
         self.freq = freq
         self.duration = duration
